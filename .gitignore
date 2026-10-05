@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# runtime state (created by the agent, never committed)
+brain/
+threads/
+events/
+memory/
+index/
+scripts/*.py
+scripts/*.json

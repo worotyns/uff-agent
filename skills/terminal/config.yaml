@@ -1,0 +1,3 @@
+timeout: 30
+workdir: ""
+allowed_commands: []

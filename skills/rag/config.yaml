@@ -1,0 +1,4 @@
+enabled: true
+max_chunk_size: 1000
+chunk_overlap: 100
+top_k_default: 5

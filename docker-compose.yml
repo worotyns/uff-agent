@@ -1,0 +1,73 @@
+# uff.email agent — self-hosted, single container.
+#
+# 1. Fill in every value under `environment:` below.
+# 2. docker compose up -d
+# 3. docker compose logs -f
+#
+# The agent is an outbound-only IMAP/SMTP client: it opens no ports, so nothing
+# is published here. All state lives in ./brain and is the only thing to back up.
+#
+# The mailbox below must be DEDICATED to the agent. Do not point it at your
+# personal inbox — your personal address belongs in EMAIL_OWNER instead.
+
+services:
+  agent:
+    image: ghcr.io/worotyns/uff-agent:latest
+    container_name: uff-agent
+    restart: unless-stopped
+    volumes:
+      - ./brain:/app/brain
+    environment:
+      AGENT_HOME: /app/brain
+      TZ: UTC
+
+      # ── LLM (required) ─────────────────────────────────────────────────────
+      # Key: https://openrouter.ai/keys
+      OPENROUTER_KEY: sk-or-v1-your-key-here
+      OPENROUTER_MODEL: deepseek/deepseek-v4.1-flash
+      ASSISTANT_MODEL: deepseek/deepseek-v4.1-flash
+      RESEARCHER_MODEL: deepseek/deepseek-v4-pro
+      VISION_MODEL: google/gemini-3.1-flash-lite
+      IMAGE_GEN_MODEL: google/gemini-3.1-flash-lite-image
+      TTS_MODEL: openai/gpt-4o-mini-tts-2025-12-15
+      TTS_VOICE: nova
+
+      # ── The agent's OWN mailbox (required, dedicated) ──────────────────────
+      # Create a SEPARATE address for the agent. Never your personal inbox.
+      EMAIL_USER: assistant@yourdomain.com
+      EMAIL_PASSWORD: your-app-password
+      EMAIL_IMAP_HOST: imap.yourdomain.com
+      EMAIL_IMAP_PORT: "993"
+      EMAIL_SMTP_HOST: smtp.yourdomain.com
+      EMAIL_SMTP_PORT: "465"        # or "587" for STARTTLS
+
+      # ── Who may talk to the agent (required) ───────────────────────────────
+      # Your personal address. This is the access-control boundary: mail from
+      # any other address is ignored.
+      EMAIL_OWNER: you@yourdomain.com
+
+      # ── Assistant ──────────────────────────────────────────────────────────
+      USER_LANGUAGE: pl
+      USER_TIMEZONE: Europe/Warsaw
+      # Reach agent "researcher" via assistant+researcher@yourdomain.com
+      AGENTS: assistant,researcher,sources
+
+      # ── Optional ───────────────────────────────────────────────────────────
+      # Keep the agent inbox clean after processing.
+      EMAIL_DELETE_AFTER_READ: "true"
+      # First-launch email. Off by default — the bundled templates are branded
+      # for uff.email. Turn it on as an SMTP smoke test, then edit
+      # brain/welcome.pl.md / brain/welcome.en.md to make it yours.
+      WELCOME_EMAIL: "false"
+      # Remote MCP tool servers, added per-user by email.
+      MCP_ENABLED: "true"
+      # Operator alerts (e.g. OpenRouter credit limit). Empty = log only.
+      ADMIN_NOTIFY_EMAIL: ""
+      # Cloudflare Browser Run — browser_screenshot / browser_markdown / browser_crawl.
+      CLOUDFLARE_ACCOUNT_ID: ""
+      CLOUDFLARE_API_TOKEN: ""
+      # Extra text appended to outgoing mail.
+      EMAIL_SIGNATURE: ""
+
+    # Nothing is encrypted at rest by this file. If you need that, put ./brain
+    # on an encrypted filesystem (LUKS, ZFS, FileVault, …).

@@ -1,0 +1,138 @@
+# Generic entity vocabulary — fits any personal/business use case.
+#
+# Advisory only: `required`/`enum` are validated when present, but unknown
+# types, extra properties, and unknown relations are always allowed.
+# Keep it broad — this is a vocabulary, not a strict contract.
+
+types:
+  Person:
+    description: "A person — contact, client, family, colleague"
+    properties:
+      name: {type: string}
+      email: {type: string}
+      phone: {type: string}
+      role: {type: string}
+      notes: {type: string}
+
+  Company:
+    description: "A company, organization, or institution"
+    properties:
+      name: {type: string}
+      industry: {type: string}
+      website: {type: string}
+      address: {type: string}
+      notes: {type: string}
+
+  Document:
+    description: "A document — contract, policy, invoice, certificate, report, letter"
+    properties:
+      name: {type: string}
+      type: {type: string}
+      date: {type: string}
+      expiry_date: {type: string}
+      status: {type: string}
+      notes: {type: string}
+
+  Event:
+    description: "An event — life event, meeting, deadline, signing, travel"
+    properties:
+      name: {type: string}
+      date: {type: string}
+      start: {type: string}
+      end: {type: string}
+      location: {type: string}
+      status: {type: string}
+      notes: {type: string}
+
+  Fact:
+    description: "A fact — any piece of information to remember"
+    properties:
+      name: {type: string}
+      statement: {type: string}
+      category: {type: string}
+      notes: {type: string}
+
+  Note:
+    description: "A note or research summary"
+    properties:
+      name: {type: string}
+      title: {type: string}
+      summary: {type: string}
+      category: {type: string}
+      sources: {type: string}
+      notes: {type: string}
+
+  Plan:
+    description: "A plan, proposal, or scenario"
+    properties:
+      name: {type: string}
+      description: {type: string}
+      context: {type: string}
+      author: {type: string}
+      date: {type: string}
+      notes: {type: string}
+
+  Task:
+    description: "A task or to-do item"
+    properties:
+      name: {type: string}
+      status: {type: string}
+      due: {type: string}
+      notes: {type: string}
+
+  Asset:
+    description: "A material thing or value — property, vehicle, policy, account"
+    properties:
+      name: {type: string}
+      type: {type: string}
+      identifier: {type: string}
+      notes: {type: string}
+
+  Place:
+    description: "A place or address"
+    properties:
+      name: {type: string}
+      address: {type: string}
+      type: {type: string}
+      notes: {type: string}
+
+  Interest:
+    description: "An interest, hobby, or preference"
+    properties:
+      name: {type: string}
+      category: {type: string}
+      notes: {type: string}
+
+  Project:
+    description: "A project or engagement"
+    properties:
+      name: {type: string}
+      description: {type: string}
+      status: {type: string}
+      notes: {type: string}
+
+relations:
+  relates_to:
+    description: "Generic any-to-any relation"
+  refers_to:
+    description: "Refers to / mentions / concerns"
+  owns:
+    description: "Person or Company owns an Asset"
+  works_at:
+    description: "Person works at a Company"
+  knows:
+    description: "Person knows Person"
+  located_at:
+    description: "Located at a Place"
+  part_of:
+    description: "Part of a Company / Project"
+  belongs_to:
+    description: "Belongs to"
+  depends_on:
+    description: "Depends on"
+  issued:
+    description: "Company issued a Document"
+  participated:
+    description: "Person participated in an Event"
+  likes:
+    description: "Person likes an Interest"

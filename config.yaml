@@ -1,0 +1,60 @@
+email:
+  imap:
+    host: ${EMAIL_IMAP_HOST}
+    port: ${EMAIL_IMAP_PORT}
+    user: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
+  smtp:
+    host: ${EMAIL_SMTP_HOST}
+    port: ${EMAIL_SMTP_PORT}
+    user: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
+    # Format: email@example.com or @domain.com for wildcard
+    # Comma-separated in env var, or list here directly
+  allowed_senders:
+    - ${EMAIL_OWNER}
+  delete_after_read: true # delete from inbox after processing
+  welcome_email: ${WELCOME_EMAIL} # send a first-launch email on startup (also an SMTP smoke test)
+  notify_email: ${EMAIL_OWNER} # where to send reminders/notifications
+  admin_notify_email: ${ADMIN_NOTIFY_EMAIL} # operator alerts (e.g. LLM credit limit); empty = log only
+  signature: "\n---\nSent by your AI assistant at uff.email"
+
+user:
+  language: ${USER_LANGUAGE}
+  timezone: ${USER_TIMEZONE}
+  # quiet_hours:               # optional: agent won't reply during these times
+  #   start: "22:00"           # UTC time
+  #   end: "07:00"             # UTC time
+
+openrouter:
+  api_key: ${OPENROUTER_KEY}
+  model: ${OPENROUTER_MODEL}
+  vision_model: ${VISION_MODEL}
+  image_gen_model: ${IMAGE_GEN_MODEL}
+  tts_model: ${TTS_MODEL}
+  tts_voice: ${TTS_VOICE}
+  web_search: ${WEB_SEARCH}
+
+# === MCP (Model Context Protocol) ===
+mcp:
+  enabled: ${MCP_ENABLED} # allow remote MCP tool servers added per-user via email
+
+# === Cloudflare Browser Run ===
+cloudflare:
+  account_id: ${CLOUDFLARE_ACCOUNT_ID}
+  api_token: ${CLOUDFLARE_API_TOKEN}
+  browser:
+    screenshot: true
+    markdown: true
+    crawl: true
+
+scheduler:
+  heartbeat: ${HEARTBEAT_INTERVAL} # seconds between heartbeats (no LLM, just housekeeping)
+  dream:
+    hour: ${DREAM_HOUR}
+  max_tool_rounds: 10 # max LLM tool-call iterations per event
+
+agents:
+  - assistant
+  - researcher
+  - sources

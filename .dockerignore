@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.venv/
+.env
+brain/
+threads/
+events/
+memory/
+index/
+*.json
+*.jsonl
+!mcp_servers.default.json

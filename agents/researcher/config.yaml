@@ -1,0 +1,22 @@
+model: ${RESEARCHER_MODEL}
+max_tool_rounds: 100
+show_sources: true
+skills:
+  - email
+  - tasks
+  - terminal
+  - scripts
+  - speech
+  - rag
+  - files
+  - web
+  - ontology
+  - image_gen
+  - browser
+  - send_progress
+  - task_system
+  - data_analysis
+  - create_attachment
+  - send_document
+  - mcp
+  - memory
