@@ -23,8 +23,11 @@ def _interpolate(value: Any, env: dict[str, str] | None = None) -> Any:
             var = m.group(1)
             if var in env:
                 return env[var]
-            logger.warning("env var %s not set, leaving as-is", var)
-            return m.group(0)
+            # An unset variable used to be left as a literal `${VAR}`, which then
+            # reached code expecting a real value (a port, a time, a model id)
+            # and crashed it. Substitute empty and let the consumer fall back.
+            logger.warning("env var %s is not set — substituting empty", var)
+            return ""
         return ENV_VAR_RE.sub(_replace, value)
     if isinstance(value, dict):
         return {k: _interpolate(v, env) for k, v in value.items()}
@@ -134,15 +137,15 @@ class Config:
 
     @property
     def openrouter_model(self) -> str:
-        return self.data["openrouter"].get("model", "deepseek/deepseek-v4.1-flash")
+        return self.data.get("openrouter", {}).get("model") or "deepseek/deepseek-v4.1-flash"
 
     @property
     def vision_model(self) -> str:
-        return self.data.get("openrouter", {}).get("vision_model", "google/gemini-3.1-flash-lite")
+        return self.data.get("openrouter", {}).get("vision_model") or "google/gemini-3.1-flash-lite"
 
     @property
     def image_gen_model(self) -> str:
-        return self.data.get("openrouter", {}).get("image_gen_model", "google/gemini-3.1-flash-lite-image")
+        return self.data.get("openrouter", {}).get("image_gen_model") or "google/gemini-3.1-flash-lite-image"
 
     @property
     def cloudflare_account_id(self) -> str:
@@ -162,7 +165,12 @@ class Config:
 
     @property
     def dream_hour(self) -> str:
-        return self.data.get("scheduler", {}).get("dream", {}).get("hour", "03:00")
+        val = (self.data.get("scheduler", {}).get("dream", {}).get("hour") or "").strip()
+        if re.fullmatch(r"\d{2}:\d{2}", val):
+            return val
+        if val:
+            logger.warning("invalid DREAM_HOUR %r — falling back to 03:00", val)
+        return "03:00"
 
     @property
     def max_tool_rounds(self) -> int:
@@ -208,11 +216,11 @@ class Config:
 
     @property
     def user_timezone(self) -> str:
-        return self.data.get("user", {}).get("timezone", "UTC")
+        return self.data.get("user", {}).get("timezone") or "UTC"
 
     @property
     def user_language(self) -> str:
-        return self.data.get("user", {}).get("language", "en")
+        return self.data.get("user", {}).get("language") or "en"
 
     @property
     def mcp_enabled(self) -> bool:

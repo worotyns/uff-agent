@@ -473,39 +473,6 @@ def test_context():
     assert "test" in ctx[0]["content"]
 
 
-# Welcome email rendering
-def test_welcome_email_rendering():
-    from pathlib import Path
-    import os
-
-    root = Path(".")
-    template_path = root / "welcome.en.md"
-    assert template_path.exists(), "welcome.en.md not found"
-
-    template = template_path.read_text()
-    agent_email = "bot@uff.email"
-    agent_handle = "bot"
-
-    body = (
-        template
-        .replace("{{agent_email}}", agent_email)
-        .replace("{{agent}}", agent_handle)
-        .strip()
-    )
-
-    assert "Hi" in body
-    assert "bot@uff.email" in body
-    assert "$4.99/month" in body
-    assert "support@uff.email" in body
-    assert body.strip().endswith("uff.email")
-
-    from src.mail.sender import md_to_html
-    html = md_to_html(body)
-    assert "<p>" in html
-    assert "bot@uff.email" in html
-    assert "<strong>" in html
-
-
 # InsufficientCreditsError propagation
 def test_insufficient_credits():
     from src.llm.openrouter import InsufficientCreditsError

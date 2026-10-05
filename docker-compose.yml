@@ -53,6 +53,10 @@ services:
       AGENTS: assistant,researcher,sources
 
       # ── Optional ───────────────────────────────────────────────────────────
+      # Housekeeping tick, seconds (no LLM calls).
+      HEARTBEAT_INTERVAL: "300"
+      # Nightly memory consolidation, UTC "HH:MM". Empty = disabled.
+      DREAM_HOUR: "03:00"
       # Keep the agent inbox clean after processing.
       EMAIL_DELETE_AFTER_READ: "true"
       # First-launch email. Off by default — the bundled templates are branded
